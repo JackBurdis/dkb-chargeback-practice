@@ -76,3 +76,41 @@ Removed the Vite demo and built a static page: a "Monopoly Bank" header bar and 
 
 **Later**
 - Switch amounts to euros properly when we add money formatting (Block 2).
+- npm's `fsevents` "install scripts" warning: newer npm blocks packages from running code at install time (supply-chain security). Discuss in Block 7.
+- REST API refresher in Block 6: requests/responses, GET vs POST, status codes, JSON payloads, API specs (OpenAPI). Jack flagged this as essential and a weak spot.
+
+---
+
+### Block 2: Types, data and money
+
+**What we built**
+A `Transaction` type (`src/types/transaction.ts`), 6 mock transactions covering every eligibility case (`src/data/transactions.ts`), a `formatMoney` function (`src/utils/formatMoney.ts`) and my first Vitest unit tests. Also switched on TypeScript `strict` mode, which the template had left off.
+
+**Concepts covered**
+- **Floating-point**: computers store decimals in binary, which can't hold 0.1 exactly (like ⅓ = 0.333... in decimal), so `0.1 + 0.2 === 0.3` is `false`. JavaScript has only this one number type and no built-in `decimal`.
+- **Money as integer cents**: store €19.99 as `1999`. Whole numbers are exact. Do the maths in cents and format only for display: "round once, at the edges".
+- **Fixed-point**: a whole number with an agreed number of decimal places, e.g. hundredths of a penny for sub-penny prices.
+- **Type**: the blank form describing a piece of data's shape. Each real transaction is a filled-in copy.
+- **Union type**: `"booked" | "pending"`, one of these exact values only. A typo like `"bookd"` gets a red squiggle as I type.
+- **Optional field (`?`) and `undefined`**: `disputeReference?` is missing when not disputed (don't use `""`). A missing field's value is `undefined`.
+- **Strings for digits**: `cardLast4` is a string because `0042` as a number becomes `42`. If you'd never do maths on it, it isn't a number.
+- **Dates as `"YYYY-MM-DD"`**: zero-padded, sorts correctly, the standard for APIs. Format for display later.
+- **`;` vs `,`**: semicolons separate fields in a **type**, commas in an **object** (real data).
+- **`export` / `import type`**: share code between files. `../` means up one folder.
+- **Mock data and edge cases**: deliberately cover each rule (booked, pending, disputed, too old, tiny amount).
+- **`Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" })`**: built-in formatting by **locale**. German uses dot for thousands and comma for decimals, with € after: `1.234,56 €`, plus a non-breaking space (` `).
+- **Unit tests (Vitest)**: check one small piece in isolation, like a factory testing the brake pad before it goes in the car. `describe` / `it` / `expect(actual).toBe(expected)`.
+- **What TypeScript can't catch**: unique IDs, date formats, wrong maths. Tests fill that gap.
+
+**Interview soundbite**
+> "I store all money as integer cents and only format at display time with `Intl.NumberFormat` for the German locale. I learned that the hard way fixing a floating-point pricing bug for a B2B client that needed sub-penny unit prices. My first unit tests immediately caught that I'd forgotten to divide by 100, and one test passed by coincidence on zero, which is a nice reminder that you need several cases, not one."
+
+**Sticky-note shorthand**
+`0.1+0.2 ≠ 0.3` · `€19.99 → 1999` · `round once, at the edges` · `1 green test ≠ proof`
+
+**What I found tricky**
+- Wrote `Text` instead of `string` (`Text` is a real DOM type, so no error!), `||` instead of `|` for unions, and forgot the `?` for optional.
+- Used `;` instead of `,` inside an object.
+- Gave every transaction `id: "1"` and wrote `"2026-3-21"`: things TypeScript can't catch.
+- `formatMoney`: missing `:` before the return type, a missing `return`, and forgot `/ 100`. The tests caught the last one.
+- Thought 5 cents was `0.5` (it's `0.05`), and mixed up German thousands and decimal separators.
