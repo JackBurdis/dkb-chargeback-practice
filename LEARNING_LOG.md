@@ -40,3 +40,39 @@ A React + TypeScript project scaffolded with Vite, committed with git and pushed
 
 **Later**
 - (nothing parked yet)
+
+---
+
+### Block 1: HTML, CSS, the DOM and how React renders
+
+**What we built**
+Removed the Vite demo and built a static page: a "Monopoly Bank" header bar and a hardcoded list of 3 transaction cards (merchant, date and masked card on the left, amount on the right), centred and responsive.
+
+**Concepts covered**
+- **Declarative (React's core idea)**: describe what the page should look like for the current data, and React works out the changes. It's like giving a taxi driver the address instead of every turn.
+- **JSX**: HTML-like syntax inside JavaScript. `className` not `class`, `{ }` for JS values, and one outer element (or a `<>` fragment).
+- **`return ( ... )`**: brackets protect against a bare `return` on its own line returning nothing.
+- **Semantic HTML**: use the element that says what the content is (`header`, `main`, `section`, `h1`/`h2`, `ul`/`li`). Screen readers use it to navigate, and headings go in order like chapters.
+- **Inheritance**: some styles (font size, weight, colour) flow down to child elements. My list inside the `<h2>` came out big and bold.
+- **Heading vs header**: `<h1>`–`<h6>` are titles; `<header>` is the top strip of a page or section.
+- **Box model**: content → padding → border → margin, like a framed photo (photo, mount, frame, gap on the wall).
+- **Flexbox**: `display: flex` on the parent lines its **direct** children up in a row, like books on a shelf. `justify-content` spaces them along the row; `align-items` lines them up across it. Wrap things in a `<div>` to keep them together.
+- **CSS nesting**: valid modern CSS, but a nested selector gets the outer one put in front automatically, so `.transaction { .transaction p {} }` matched nothing.
+- **Responsive design**: `max-width` + `margin: 0 auto` for a readable, centred column (like a newspaper). A **media query** (`@media (min-width: 768px)`) applies rules only at certain screen sizes. Mobile-first means phone styles first, then extras for bigger screens.
+- **The cascade**: when two rules have the same strength, the one loaded later wins, like the newest note on the fridge. A media query decides *whether* a rule applies, not how strong it is.
+
+**Interview soundbite**
+> "I built the layout with semantic HTML first (header, main, a real list for the transactions) because screen readers use that structure to navigate, and accessibility is a legal requirement for banking in the EU. It's mobile-first CSS with flexbox, and I hit a nice cascade bug where my media query was being overridden by a rule loaded later. DevTools showed it crossed out, so I moved it next to the rule it changes."
+
+**Sticky-note shorthand**
+`taxi: address not turns` · `photo/mount/frame/wall` · `flex = direct kids only` · `later rule wins`
+
+**What I found tricky**
+- I put the `<ul>` inside the `<h2>` by accident, and the whole list inherited heading styles.
+- I wrapped only the merchant in the `<div>` at first, so flexbox still saw three children.
+- I nested `.transaction p` inside `.transaction`, which silently matched nothing.
+- My media query in `index.css` was overridden by `App.css` (the cascade). I also had to learn that the Styles panel only shows the *selected* element and hides media queries that don't currently apply.
+- I forgot to save once, so I turned on Auto Save.
+
+**Later**
+- Switch amounts to euros properly when we add money formatting (Block 2).
