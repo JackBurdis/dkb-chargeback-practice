@@ -115,3 +115,49 @@ A `Transaction` type (`src/types/transaction.ts`), 6 mock transactions covering 
 - Gave every transaction `id: "1"` and wrote `"2026-3-21"`: things TypeScript can't catch.
 - `formatMoney`: missing `:` before the return type, a missing `return`, and forgot `/ 100`. The tests caught the last one.
 - Thought 5 cents was `0.5` (it's `0.05`), and mixed up German thousands and decimal separators.
+
+---
+
+### Block 3: Components, props and state
+
+**What we built**
+Split the page into `TransactionItem` and `TransactionDetail` components, rendered all 6 mock transactions from data with `.map()`, made each card a clickable `<button>` that selects it, showed a details panel for the selected transaction, and wrote `canDispute(transaction, today)` with 5 tests, including boundary tests. 9 tests pass in total.
+
+**Concepts covered**
+- **Component**: a reusable piece of UI written as a function that returns JSX, named with a capital letter. Like a conference name-badge template.
+- **Props**: the details you feed into a component, like the name on the badge. Described with a props type.
+- **Destructuring**: `{ transaction, onSelect }` unpacks values from the props. Anything not unpacked isn't available (like taking only one item out of the parcel).
+- **`.map()`**: turns an array of data into an array of components. A production line.
+- **Arrow function / callback**: `(t) => t.id === selectedId` is a short function passed into another function (`.map`, `.find`, `onClick`) to be "called back". `t` is just a name I choose.
+- **`key`**: a unique ID on each list item so React can tell them apart when the list changes. Cloakroom tickets. Duplicates give a Console warning and mixed-up items.
+- **State (`useState`)**: a component's memory. Changing it redraws the page. A scoreboard. Only change it with the setter.
+- **Event handlers**: functions passed to `onClick`. Clickable things must be `<button>`s for keyboard and screen-reader users.
+- **Lifting state up**: keep state in the closest shared parent (`App`) and pass a function down so children can update it. The family calendar on the fridge.
+- **Derived data**: store only the selected ID and work out the full transaction with `.find()`, so they can't get out of sync. A library ticket, not a photocopy.
+- **Conditional rendering**: `{x && <Thing />}` shows something only if `x` exists. A ternary `cond ? <A /> : <B />` picks one of two (a fork in the road).
+- **`const` / variable vs prop vs constructor**: `const` makes a named box; a prop is a value passed into a component; constructors belong to classes, which we don't use.
+- **Scope**: names only exist where they're defined. `today` and `transaction` only exist inside `canDispute`.
+- **Pure function**: the output depends only on the inputs, like a calculator. I pass `today` in so tests stay the same forever.
+- **Named constant**: `DISPUTE_WINDOW_DAYS = 120` instead of a bare number.
+- **Spread (`...`)**: `{ ...base, status: "pending" }` copies an object and changes one field. Photocopy, then tippex one box.
+- **Boundary tests and off-by-one errors**: test exactly at the edge (120 days) and just past it (121). That's where `>` vs `>=` bugs hide.
+- **Shared CSS class**: reuse styles through a class named for the shared look (`.card`), not by borrowing a class named for something else.
+- **Debugging a white screen**: React crashed while drawing, so check the Console first, and the VS Code Problems panel (Cmd+Shift+M).
+
+**Interview soundbite**
+> "I keep the selected transaction's ID in state in the parent component and derive the full object from it, so there's a single source of truth. Eligibility is a pure function, `canDispute(transaction, today)`. Passing the date in makes it deterministic to test, and my boundary tests caught an off-by-one where I'd used `>=` instead of `>` on the 120-day window."
+
+**Sticky-note shorthand**
+`props in, state inside` · `key = cloakroom ticket` · `store ID, derive rest` · `pass today in` · `test the edges`
+
+**What I found tricky**
+- This is where I moved from following to thinking for myself, and it felt like I hadn't learned anything. In fact I wrote most of `TransactionDetail` myself, just with small mistakes.
+- Forgot to destructure `onSelect`, forgot imports twice (`Transaction`, `canDispute`), and mangled an import path.
+- Used `+` and quotes inside JSX text, as if it were plain JS.
+- Bare `return` on its own line returned nothing (white panel), the exact trap I'd been warned about.
+- Put a `<section>` inside a `<p>` (invalid HTML), and gave a `<dt>` the whole panel's class.
+- Confused `const` with a C# constructor.
+- Rule 2: wrote `& ... = !null`. It should be `&&`, `!==`, and a missing field is `undefined`, not `null`. The simplest fix was `if (transaction.disputeReference)`.
+- Rule 3: put `ageInDays` outside the function (scope), then flipped between `>=`, `<=` and `>`. Reading each `if` as "when do we refuse?" helped.
+- Named the test file `.text.ts`, forgot `.allowed`, and my 121-day test date was actually 119. A failing test can be a bug in the test, not the code.
+- The media query cascade bug came back (I put it above the rule it changes).
