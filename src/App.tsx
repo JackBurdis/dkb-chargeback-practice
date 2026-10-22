@@ -1,10 +1,12 @@
 import './App.css'
 import { useState } from "react"
 import { TransactionItem } from "./components/TransactionItem"
+import { TransactionDetail } from "./components/TransactionDetail"
 import { transactions } from "./data/transactions"
 
 function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedTransaction = transactions.find((t) => t.id === selectedId);
   return (<>
     <header>
       <p>
@@ -21,11 +23,11 @@ function App() {
         </h2>
         <ul>
           {transactions.map((transaction) => (
-            <TransactionItem key={transaction.id} transaction={transaction} onSelect={() => setSelectedId(transaction.id)}/>
+            <TransactionItem key={transaction.id} transaction={transaction} onSelect={() => setSelectedId(transaction.id)} />
           ))}
         </ul>
-        <p>Selected: {selectedId}</p>
       </section>
+      {selectedTransaction && <TransactionDetail transaction={selectedTransaction} />}
     </main>
   </>)
 

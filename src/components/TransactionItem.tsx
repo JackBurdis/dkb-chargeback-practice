@@ -7,7 +7,7 @@ type TransactionItemProps = {
 }
 
 export function TransactionItem({ transaction, onSelect }: TransactionItemProps) {
-    return <li className='transaction'>
+    return <li className='transaction card'>
         <button onClick={onSelect}>
             <div>
                 <p className="merchant">{transaction.merchant}</p>
