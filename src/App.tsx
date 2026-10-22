@@ -1,4 +1,6 @@
 import './App.css'
+import { TransactionItem } from "./components/TransactionItem"
+import { transactions } from "./data/transactions"
 
 function App() {
   return (<>
@@ -16,27 +18,7 @@ function App() {
           Recent transactions
         </h2>
         <ul>
-          <li className='transaction'>
-            <div>
-              <p className="merchant">IV Coffee Station</p>
-              <p className="details"> 18 Oct 2026 · •••• 4532 </p>
-            </div>
-            <p className='amount'>£12.50</p>
-          </li>
-          <li className='transaction'>
-            <div>
-              <p className="merchant">Pizza by the Slice</p>
-              <p className="details"> 18 Oct 2026 · •••• 4532 </p>
-            </div>
-            <p className='amount'>£1.99</p>
-          </li>
-          <li className='transaction'>
-            <div>
-              <p className="merchant">Unicycle Repair</p>
-              <p className="details"> 18 Oct 2026 · •••• 4532 </p>
-            </div>
-            <p className='amount'>£40.49</p>
-          </li>
+          <TransactionItem transaction={transactions[0]}/>
         </ul>
       </section>
     </main>
