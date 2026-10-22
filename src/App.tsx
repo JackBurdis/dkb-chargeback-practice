@@ -1,8 +1,10 @@
 import './App.css'
+import { useState } from "react"
 import { TransactionItem } from "./components/TransactionItem"
 import { transactions } from "./data/transactions"
 
 function App() {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   return (<>
     <header>
       <p>
@@ -18,8 +20,11 @@ function App() {
           Recent transactions
         </h2>
         <ul>
-          <TransactionItem transaction={transactions[0]}/>
+          {transactions.map((transaction) => (
+            <TransactionItem key={transaction.id} transaction={transaction} onSelect={() => setSelectedId(transaction.id)}/>
+          ))}
         </ul>
+        <p>Selected: {selectedId}</p>
       </section>
     </main>
   </>)

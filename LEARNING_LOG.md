@@ -77,6 +77,7 @@ Removed the Vite demo and built a static page: a "Monopoly Bank" header bar and 
 **Later**
 - Switch amounts to euros properly when we add money formatting (Block 2).
 - npm's `fsevents` "install scripts" warning: newer npm blocks packages from running code at install time (supply-chain security). Discuss in Block 7.
+- Interview prep: drill deeper into **state and event handlers** (props vs state, why the setter, re-renders, state updates being async/batched, lifting state up). Jack flagged these as core React.
 - REST API refresher in Block 6: requests/responses, GET vs POST, status codes, JSON payloads, API specs (OpenAPI). Jack flagged this as essential and a weak spot.
 
 ---
